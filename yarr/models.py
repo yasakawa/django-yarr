@@ -9,6 +9,12 @@ import urllib2
 from django.core.validators import URLValidator
 from django.db import models
 
+try:
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+except ImportError:
+    from django.contrib.auth.models import User
+
 import feedparser
 # ++ TODO: tags
 
@@ -103,7 +109,7 @@ class Feed(models.Model):
     )
     
     # Internal fields
-    user = models.ForeignKey('auth.User')
+    user = models.ForeignKey(User)
     added = models.DateTimeField(
         auto_now_add=True, help_text="Date this feed was added",
     )
