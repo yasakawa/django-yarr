@@ -11,7 +11,7 @@ import bleach
 from yarr import settings
 from yarr.constants import ENTRY_UNREAD, ENTRY_READ, ENTRY_SAVED
 from django.utils import timezone
-
+from django.utils.timezone import utc
 
 ###############################################################################
 #                                                               Feed model
@@ -283,7 +283,7 @@ class EntryManager(models.Manager):
         if date is not None:
             entry.date = datetime.datetime.fromtimestamp(
                 time.mktime(date)
-            )
+            ).replace(tzinfo=utc)
         
         entry.url = raw.get('link', '')
         entry.guid = raw.get('guid', entry.url)

@@ -539,6 +539,8 @@ class Entry(models.Model):
         # Default the date
         if self.date is None:
             self.date = datetime.datetime.utcnow().replace(tzinfo=utc)
+        else:
+            self.date = self.date.replace(tzinfo=utc)
 
         # Save
         super(Entry, self).save(*args, **kwargs)
