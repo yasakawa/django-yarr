@@ -356,7 +356,7 @@ class Feed(models.Model):
         if updated:
             updated = datetime.datetime.fromtimestamp(
                 time.mktime(updated)
-            )
+            ).replace(tzinfo=utc)
 
         # Stop if we now know it hasn't updated recently
         if (
