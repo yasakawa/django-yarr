@@ -8,6 +8,7 @@ import urllib2
 
 from django.core.validators import URLValidator
 from django.db import models
+from django.utils import timezone
 
 import feedparser
 # ++ TODO: tags
@@ -293,7 +294,7 @@ class Feed(models.Model):
         logfile.write("[%s] %s" % (self.pk, self.feed_url))
         
         # Check it's due for a check before the next poll
-        now = datetime.datetime.now()
+        now = timezone.now()
         next_poll = now + datetime.timedelta(minutes=settings.MINIMUM_INTERVAL)
         if (
             not force
