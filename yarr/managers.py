@@ -10,7 +10,8 @@ import bleach
 
 from yarr import settings
 from yarr.constants import ENTRY_UNREAD, ENTRY_READ, ENTRY_SAVED
-
+from django.utils import timezone
+from django.utils.timezone import utc
 
 ###############################################################################
 #                                                               Feed model
@@ -173,7 +174,7 @@ class EntryQuerySet(models.query.QuerySet):
         return self.filter(
             expires__isnull=True
         ).update(
-            expires=datetime.datetime.now() + datetime.timedelta(
+            expires=datetime.datetime.utcnow().replace(tzinfo=timezone.utc) + datetime.timedelta(
                 days=settings.ITEM_EXPIRY,
             )
         )
@@ -282,7 +283,7 @@ class EntryManager(models.Manager):
         if date is not None:
             entry.date = datetime.datetime.fromtimestamp(
                 time.mktime(date)
-            )
+            ).replace(tzinfo=utc)
         
         entry.url = raw.get('link', '')
         entry.guid = raw.get('guid', entry.url)
