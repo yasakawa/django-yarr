@@ -23,7 +23,7 @@ class FeedQuerySet(models.query.QuerySet):
     def check(self, force=False, read=False, logfile=None):
         "Check active feeds for updates"
         for feed in self.active():
-            feed.check(force, read, logfile)
+            feed.feed_check(force, read, logfile)
         
         # Update the total and unread counts
         self.update_count_unread()
