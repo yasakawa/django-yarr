@@ -35,15 +35,15 @@
     
     <ul class="yarr_entry_control">
         {% if entry.state == constants.ENTRY_READ %}
-            <li><a href="{% url 'yarr-mark_saved' entry_pk=entry.pk %}">Save</a></li>
-            <li><a href="{% url 'yarr-mark_unread' entry_pk=entry.pk %}">Mark as unread</a></li>
+            <li><a href="{% url 'yarr:yarr-mark_saved' entry_pk=entry.pk %}">Save</a></li>
+            <li><a href="{% url 'yarr:yarr-mark_unread' entry_pk=entry.pk %}">Mark as unread</a></li>
         {% else %}
             {% if entry.state == constants.ENTRY_SAVED %}
                 <li>Saved</li>
-                <li><a href="{% url 'yarr-mark_read' entry_pk=entry.pk %}">Discard as read</a></li>
+                <li><a href="{% url 'yarr:yarr-mark_read' entry_pk=entry.pk %}">Discard as read</a></li>
             {% else %}
-                <li><a href="{% url 'yarr-mark_saved' entry_pk=entry.pk %}">Save</a></li>
-                <li><a href="{% url 'yarr-mark_read' entry_pk=entry.pk %}">Mark as read</a></li>
+                <li><a href="{% url 'yarr:yarr-mark_saved' entry_pk=entry.pk %}">Save</a></li>
+                <li><a href="{% url 'yarr:yarr-mark_read' entry_pk=entry.pk %}">Mark as read</a></li>
             {% endif %}
         {% endif %}
     </ul>
