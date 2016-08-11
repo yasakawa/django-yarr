@@ -4,8 +4,8 @@
 
 {% block js %}
 {{ block.super }}
-<script src="{{ STATIC_URL }}yarr/js/yarr.js"></script>
-<script src="{{ STATIC_URL }}yarr/js/list_entries.js"></script>
+<script src="{% static 'yarr/js/yarr.js'"></script>
+<script src="{% static 'yarr/js/list_entries.js'"></script>
 <!--The following is a fix for chrome to avoid remember the scroll position after refresh-->
 <!--Ref: http://stackoverflow.com/questions/16239520/chrome-remembers-scroll-position -->
 <script>
