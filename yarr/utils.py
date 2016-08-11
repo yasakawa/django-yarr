@@ -5,6 +5,7 @@ from xml.dom import minidom
 from xml.etree.ElementTree import Element, SubElement, ElementTree
 from cStringIO import StringIO
 
+from compat import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.exceptions import ObjectDoesNotExist
@@ -99,7 +100,8 @@ def jsonResponse(data):
     """
     Return a JSON HttpResponse
     """
-    return HttpResponse(jsonEncode(data), mimetype='application/json')
+    return JsonResponse(data)
+    # return HttpResponse(jsonEncode(data), mimetype='application/json')
 
 def import_opml(file_path, user, purge=False):
     if purge:
