@@ -21,7 +21,7 @@ class FeedQuerySet(models.query.QuerySet):
         "Filter to active feeds"
         return self.filter(is_active=True)
         
-    def check(self, force=False, read=False, logfile=None):
+    def check_feed(self, force=False, read=False, logfile=None):
         "Check active feeds for updates"
         for feed in self.active():
             feed.feed_check(force, read, logfile)
@@ -99,7 +99,7 @@ class FeedManager(models.Manager):
         "Active feeds"
         return self.get_query_set().active()
         
-    def check(self, force=False, read=False, logfile=None):
+    def check_feed(self, force=False, read=False, logfile=None):
         "Check all active feeds for updates"
         return self.get_query_set().check(force, read, logfile)
         
