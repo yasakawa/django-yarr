@@ -101,7 +101,7 @@ class FeedManager(models.Manager):
         
     def check_feed(self, force=False, read=False, logfile=None):
         "Check all active feeds for updates"
-        return self.get_query_set().check(force, read, logfile)
+        return self.get_query_set().check_feed(force, read, logfile)
         
     def update_count_total(self):
         "Update the cached total counts"
@@ -115,7 +115,7 @@ class FeedManager(models.Manager):
         "Get a dict of unread counts, with feed pks as keys"
         return self.get_query_set().count_unread()
         
-    def get_query_set(self):
+    def get_queryset(self):
         "Return a FeedQuerySet"
         return FeedQuerySet(self.model)
 
