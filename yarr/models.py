@@ -63,6 +63,12 @@ class EntryError(Exception):
     pass
 
 
+def no_timezone_beijing_date_handler(aDateString):
+    return feedparser._parse_date_rfc822(aDateString + " +0800")
+
+
+feedparser.registerDateHandler(no_timezone_beijing_date_handler)
+
 ###############################################################################
 #                                                               Feed model
 
