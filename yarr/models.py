@@ -17,7 +17,6 @@ import feedparser
 from yarr import settings, managers
 from yarr.constants import ENTRY_UNREAD, ENTRY_READ, ENTRY_SAVED
 
-
 ###############################################################################
 #                                                               Setup
 
@@ -104,7 +103,7 @@ class Feed(models.Model):
     title = models.TextField(help_text="Published title of the feed")
     feed_url = models.TextField("Feed URL",
                                 validators=[URLValidator()], help_text="URL of the RSS feed",
-    )
+                                )
     text = models.TextField(
         "Custom title",
         blank=True,
@@ -114,7 +113,7 @@ class Feed(models.Model):
     # Optional data fields
     site_url = models.TextField("Site URL",
                                 validators=[URLValidator()], help_text="URL of the HTML site",
-    )
+                                )
 
     # Internal fields
     user = models.ForeignKey('auth.User')
@@ -204,9 +203,9 @@ class Feed(models.Model):
         if status in (200, 302, 304, 307):
             # Check for valid feed
             if (
-                            feed is None
-                    or 'title' not in feed
-                or 'link' not in feed
+                                feed is None
+                        or 'title' not in feed
+                    or 'link' not in feed
             ):
                 raise FeedError('Feed parsed but with invalid contents')
 
@@ -244,7 +243,7 @@ class Feed(models.Model):
 
         # Unknown status
         raise FeedError('Unrecognised HTTP status %s' % status)
-    
+
     def feed_check(self, force=False, read=False, logfile=None):
         """
         Check the feed for updates
@@ -304,9 +303,9 @@ class Feed(models.Model):
         now = datetime.datetime.utcnow().replace(tzinfo=utc)
         next_poll = now + datetime.timedelta(minutes=settings.MINIMUM_INTERVAL)
         if (
-                    not force
-                and self.next_check is not None
-            and self.next_check >= next_poll
+                        not force
+                    and self.next_check is not None
+                and self.next_check >= next_poll
         ):
             logfile.write('Not due yet')
             # Return False, because nothing has changed yet
@@ -360,10 +359,10 @@ class Feed(models.Model):
 
         # Stop if we now know it hasn't updated recently
         if (
-                        not force
-                    and updated
-                and self.last_updated
-            and updated <= self.last_updated
+                            not force
+                        and updated
+                    and self.last_updated
+                and updated <= self.last_updated
         ):
             logfile.write('Has not updated')
             return True
@@ -412,9 +411,9 @@ class Feed(models.Model):
                 query = {
                     'guid': entry.guid,
                 }
-            elif entry.link:
+            elif entry.url:
                 query = {
-                    'link': entry.link,
+                    'url': entry.url,
                 }
             elif entry.title and entry.date:
                 # If title and date provided, this will match
@@ -448,8 +447,8 @@ class Feed(models.Model):
 
             # Update latest tracker
             if latest is None or (
-                        entry.date.replace(tzinfo=timezone.utc) is not None and
-                        entry.date.replace(tzinfo=timezone.utc) > latest
+                            entry.date.replace(tzinfo=timezone.utc) is not None and
+                            entry.date.replace(tzinfo=timezone.utc) > latest
             ):
                 latest = entry.date.replace(tzinfo=timezone.utc)
 
@@ -458,7 +457,14 @@ class Feed(models.Model):
         #   they weren't found in the feed
         #   they have been read (excludes those saved)
         if settings.ITEM_EXPIRY >= 0:
-            self.entries.exclude(pk__in=found).read().set_expiry()
+            # custom manager for relation is not supported for foreign key, directly add query below
+            self.entries.exclude(pk__in=found).filter(state=ENTRY_READ).filter(
+                expires__isnull=True
+            ).update(
+                expires=datetime.datetime.utcnow().replace(tzinfo=timezone.utc) + datetime.timedelta(
+                    days=settings.ITEM_EXPIRY,
+                )
+            )
 
         return latest
 

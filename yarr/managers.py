@@ -4,6 +4,7 @@ Yarr model managers
 import datetime
 import time
 
+from compat import get_model
 from django.db import connection, models, transaction
 
 import bleach
@@ -45,8 +46,8 @@ class FeedQuerySet(models.query.QuerySet):
         # IDs and states should only ever be ints, but force them to
         # ints to be sure we don't introduce injection vulns
         opts = {
-            'feed':     models.loading.get_model('yarr', 'Feed')._meta.db_table,
-            'entry':    models.loading.get_model('yarr', 'Entry')._meta.db_table,
+            'feed':     get_model('yarr', 'Feed')._meta.db_table,
+            'entry':    get_model('yarr', 'Entry')._meta.db_table,
             'ids':      ','.join([str(int(id)) for id in ids]),
             
             # Fields which should be set in extra
@@ -54,7 +55,20 @@ class FeedQuerySet(models.query.QuerySet):
             'where':    '',
         }
         opts.update(extra)
+
+        if transaction.atomic:
+            # See https://github.com/mocco/django-fabric/pull/17/commits/3956d44a9527b2c1f4d051e2c94128741a512bd6
+            with transaction.atomic():
+                self.execute_update_query(opts)
+        else:
+            self.execute_update_query(opts)
+
+            # Ensure changes are committed in Django 1.5 or earlier
+            transaction.commit_unless_managed()
         
+        return self
+
+    def execute_update_query(self, opts):
         # Uses raw query so we can update in a single call to avoid race condition
         cursor = connection.cursor()
         cursor.execute(
@@ -70,12 +84,7 @@ class FeedQuerySet(models.query.QuerySet):
                 WHERE id IN (%(ids)s)
             """ % opts
         )
-        
-        # Ensure changes are committed in Django 1.5 or earlier
-        transaction.commit_unless_managed()
-        
-        return self
-    
+
     def update_count_total(self):
         "Update the cached total counts"
         return self._do_update({
