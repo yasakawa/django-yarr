@@ -16,42 +16,40 @@ if not settings.DEBUG:
 
 class Command(BaseCommand):
     help = 'Check feeds for updates'
-    option_list = BaseCommand.option_list + (
-        make_option(
+    def add_arguments(self, parser):
+        parser.add_argument(
             '--force',
             action='store_true',
             dest='force',
             default=False,
             help='Force all feeds to update',
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--read',
             action='store_true',
             dest='read',
             default=False,
             help='Any new items will be marked as read; useful when importing',
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--purge',
             action='store_true',
             dest='purge',
             default=False,
             help='Purge current entries and reset feed counters',
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--verbose',
             action='store_true',
             dest='verbose',
             default=False,
             help='Print information to the console',
-        ),
-        make_option(
+        )
+        parser.add_argument(
             '--url',
             dest='url',
             help='Specify the URL to update',
-        ),
-    )
-    
+        )
     @with_socket_timeout
     def handle(self, *args, **options):
         # Apply url filter
