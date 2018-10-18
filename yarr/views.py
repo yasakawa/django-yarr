@@ -436,7 +436,7 @@ def api_feed_get(request):
         # Escape values as necessary, and add to the response dict under the pk
         data[feed.pop('pk')] = dict([
             (key, val if key in safe_fields else escape(val))
-            for key, val in feed.items()
+            for key, val in list(feed.items())
         ])
     
     # Respond

@@ -3,7 +3,7 @@ Utils for yarr
 """
 from xml.dom import minidom
 from xml.etree.ElementTree import Element, SubElement, ElementTree
-from cStringIO import StringIO
+from io import StringIO
 
 from compat import JsonResponse
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
@@ -154,7 +154,7 @@ def export_opml(user):
 
     head = SubElement(root, 'head')
     title = SubElement(head, 'title')
-    title.text = u'{0} subscriptions'.format(user.username)
+    title.text = '{0} subscriptions'.format(user.username)
 
     body = SubElement(root, 'body')
 

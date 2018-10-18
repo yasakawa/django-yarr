@@ -76,7 +76,7 @@ class FeedTest(TestCase):
         # Check the feed data
         self.assertEqual(self.feed_malformed.site_url, '')
         self.assertEqual(self.feed_malformed.is_active, True)
-        self.assertRegexpMatches(
+        self.assertRegex(
             self.feed_malformed.error,
             r'^Feed error: SAXParseException - '
         )
@@ -91,7 +91,7 @@ class FeedTest(TestCase):
 
         # Check the feed object
         self.assertEqual(self.feed_missing_server.is_active, True)
-        self.assertRegexpMatches(
+        self.assertRegex(
             self.feed_missing_server.error,
             r'^URL error: .+?Name or service not known',
         )

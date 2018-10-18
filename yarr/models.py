@@ -5,7 +5,7 @@ Yarr models
 import datetime
 from django.utils.timezone import utc
 import time
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from django.core.validators import URLValidator
 from django.db import models
@@ -190,7 +190,7 @@ class Feed(models.Model):
         # parsed anyway, so feed and entries will be available on the exception
         if d.get('bozo') == 1:
             bozo = d['bozo_exception']
-            if isinstance(bozo, urllib2.URLError):
+            if isinstance(bozo, urllib.error.URLError):
                 raise FeedError('URL error: %s' % bozo)
 
             # Unrecognised exception
@@ -328,7 +328,7 @@ class Feed(models.Model):
         logfile.write('Fetching...')
         try:
             feed, entries = self._fetch_feed()
-        except FeedError, e:
+        except FeedError as e:
             logfile.write('Error: %s' % e)
 
             # Update model to reflect the error
@@ -376,7 +376,7 @@ class Feed(models.Model):
         # Add or update any entries, and get latest timestamp
         try:
             latest = self._update_entries(entries, read)
-        except EntryError, e:
+        except EntryError as e:
             if self.error:
                 self.error += '. '
             self.error += "Entry error: %s" % e
