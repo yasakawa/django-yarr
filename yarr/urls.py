@@ -29,9 +29,9 @@ urlpatterns = [
     url(r'^state/save/entry/(?P<entry_pk>\d+)/$', views.entry_state,{'state': ENTRY_SAVED}, name="yarr-mark_saved"),
 
     # JSON API
-    url(r'^api/$', 'api_base', name='yarr-api_base'),
-    url(r'^api/feed/get/$', 'api_feed_get', name='yarr-api_feed_get'),
-    url(r'^api/feed/pks/$', 'api_feed_pks_get', name='yarr-api_feed_pks_get'),
-    url(r'^api/entry/get/$', 'api_entry_get', name='yarr-api_entry_get'),
-    url(r'^api/entry/set/$', 'api_entry_set', name='yarr-api_entry_set'),
+    url(r'^api/$', api_base, name='yarr-api_base'),
+    url(r'^api/feed/get/$', api_feed_get, name='yarr-api_feed_get'),
+    url(r'^api/feed/pks/$', api_feed_pks_get, name='yarr-api_feed_pks_get'),
+    url(r'^api/entry/get/$', api_entry_get, name='yarr-api_entry_get'),
+    url(r'^api/entry/set/$', api_entry_set, name='yarr-api_entry_set'),
 ]
