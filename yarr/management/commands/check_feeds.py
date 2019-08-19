@@ -16,12 +16,14 @@ if not settings.DEBUG:
 
 class Command(BaseCommand):
     help = 'Check feeds for updates'
+
     def add_arguments(self, parser):
         parser.add_argument('--force',
             action='store_true',
             dest='force',
             default=False,
-            help='Force all feeds to update')
+            help='Force all feeds to update'
+        )
         parser.add_argument(
             '--read',
             action='store_true',
