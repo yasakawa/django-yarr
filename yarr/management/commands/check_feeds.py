@@ -48,7 +48,6 @@ class Command(BaseCommand):
             dest='url',
             help='Specify the URL to update',
         )
-    )
     
     @with_socket_timeout
     def handle(self, *args, **options):
