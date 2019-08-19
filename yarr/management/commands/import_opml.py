@@ -11,15 +11,14 @@ from yarr.utils import import_opml
 class Command(BaseCommand):
     help = 'Import subscriptions from an OPML file'
 
-    option_list = BaseCommand.option_list + (
-        make_option(
+    def add_arguments(self, parser):
+        parser.add_argument(
             '--purge',
             action='store_true',
             dest='purge',
             default=False,
             help='Purge current feeds for this user',
-        ),
-    )
+        )
 
     def handle(self, subscription_file, username, *args, **options):
         # Get subscriptions
